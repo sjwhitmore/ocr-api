@@ -1,5 +1,6 @@
 
 
+import os
 import urllib.request
 
 from flask import Flask, jsonify, request
@@ -18,6 +19,8 @@ def ocr():
     config = ('-l eng --oem 1 --psm 3')
     raw_result = pytesseract.image_to_string(Image.open(img_path), config=config)
     result = raw_result.replace('|', 'I')
+    # clean up file
+    os.remove(img_path)
     return {
         'statusCode': 200,
         'body': result

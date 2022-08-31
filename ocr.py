@@ -1,3 +1,5 @@
+import json
+import logging
 import os
 import urllib.request
 
@@ -12,7 +14,10 @@ CORS(app)
 
 @app.route('/ocr', methods=['POST'])
 def ocr():
-    image_url = request.form['image']
+    req_data = json.loads(request.data)
+    image_url = req_data.get("image")
+    print ('image url')
+    print(image_url)
     img_path = image_url.split('/')[-1]
     urllib.request.urlretrieve(
        image_url,
@@ -36,6 +41,8 @@ def ocr():
     raw_result = pytesseract.image_to_string(Image.open(img_path), config=config)
     # it always gets "I" wrong
     result = raw_result.replace('|', 'I')
+    print('result')
+    print(result)
     # remove the processed image
     #os.remove(proc_path)
     # remove original image
@@ -46,4 +53,5 @@ def ocr():
     }
 
 if __name__ == '__main__':
+    logging.getLogger('flask_cors').level = logging.DEBUG
     app.run(host='0.0.0.0', port=8080, debug=True)

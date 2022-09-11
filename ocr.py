@@ -14,9 +14,10 @@ CORS(app)
 
 @app.route('/ocr', methods=['POST'])
 def ocr():
+    print("hi")
     req_data = json.loads(request.data)
     image_url = req_data.get("image")
-    print ('image url')
+    print('image url')
     print(image_url)
     img_path = image_url.split('/')[-1]
     urllib.request.urlretrieve(
@@ -47,10 +48,10 @@ def ocr():
     #os.remove(proc_path)
     # remove original image
     os.remove(img_path)
-    return {
+    return jsonify({
         'statusCode': 200,
-        'body': result
-    }
+        'text': result
+    })
 
 if __name__ == '__main__':
     logging.getLogger('flask_cors').level = logging.DEBUG
